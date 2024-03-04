@@ -1,0 +1,11 @@
+Warrior:
+  Class: Warrior
+  Health: 100
+  Mana: 0
+  MaxMana: 0
+  Strength: 5
+  Dexterity: 0
+  Intelligence: 0
+  Magic: 0
+
+WarriorPlayers:

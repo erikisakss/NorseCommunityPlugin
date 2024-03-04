@@ -1,0 +1,41 @@
+name: NorseCommunityPlugin
+version: '${project.version}'
+main: norsecommunityplugin.norsecommunityplugin.NorseCommunityPlugin
+api-version: '1.20'
+commands:
+  setspawn:
+    description: Sets the spawn
+    usage: /setspawn
+    permission: norsecommunityplugin.setspawn
+  spawn:
+    description: Teleports you to the spawn
+    usage: /spawn
+    permission: norsecommunityplugin.spawn
+  nationmenu:
+    description: Opens the nation menu
+    usage: /nationmenu
+    permission: norsecommunityplugin.nationmenu
+  neverrainagain:
+    description: Never rains again
+    usage: /neverrainagain
+    permission: norsecommunityplugin.neverrainagain
+
+  dagger:
+    description: Gives you a dagger
+    usage: /dagger
+    permission: norsecommunityplugin.dagger
+
+  removeblackstone:
+    description: Removes blackstone
+    usage: /removeblackstone <player>
+    permission: norsecommunityplugin.removeblackstone
+
+  classmenu:
+    description: Opens the class menu
+    usage: /classmenu
+    permission: norsecommunityplugin.class
+
+  stats:
+    description: Shows your stats
+    usage: /stats <player> or /stats
+    permission: norsecommunityplugin.stats

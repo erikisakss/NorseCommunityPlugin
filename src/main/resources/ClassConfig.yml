@@ -1,0 +1,47 @@
+# Class Configuration File
+#Warrior base stats
+Warrior:
+     Class: Warrior
+     Health: 100
+     MaxHealth: 100
+     Mana: 0
+     MaxMana: 0
+     Strength: 5
+     Dexterity: 0
+     Intelligence: 0
+     Magic: 0
+#Priest base stats
+Priest:
+     Class: Priest
+     Health: 100
+     MaxHealth: 100
+     Mana: 100
+     MaxMana: 100
+     Strength: 0
+     Dexterity: 0
+     Intelligence: 5
+     Magic: 0
+#Mage base stats
+Mage:
+        Class: Mage
+        Health: 100
+        MaxHealth: 100
+        Mana: 100
+        MaxMana: 100
+        Strength: 0
+        Dexterity: 0
+        Intelligence: 0
+        Magic: 5
+#Assassin base stats
+Assassin:
+        Class: Assassin
+        Health: 100
+        MaxHealth: 100
+        Mana: 0
+        MaxMana: 0
+        Strength: 0
+        Dexterity: 5
+        Intelligence: 0
+        Magic: 0
+
+
