@@ -28,6 +28,12 @@ public class PlayerConfig extends Config{
         setCurrentHP(uuid, 100);
         setMaxMana(uuid, 100);
         setCurrentMana(uuid, 100);
+        setProtection(uuid, 0);
+        setDamage(uuid, 0);
+        setStrength(uuid, 0);
+        setWisdom(uuid, 0);
+        setIntelligence(uuid, 0);
+        setDexterity(uuid, 0);
         setNation(uuid, "None");
         setClan(uuid, "None");
         setPlayerClass(uuid, "None");
@@ -85,6 +91,12 @@ public class PlayerConfig extends Config{
         return getInt(path);
     }
 
+    public int getDamage(UUID uuid) {
+        String path = "Players." + uuid.toString() + ".Damage";
+        return getInt(path);
+    }
+
+
     public int getStrength(UUID uuid) {
         String path = "Players." + uuid.toString() + ".Strength";
         return getInt(path);
@@ -108,6 +120,11 @@ public class PlayerConfig extends Config{
     public void setProtection(UUID uuid, int protection) {
         String path = "Players." + uuid.toString() + ".Protection";
         set(path, protection);
+    }
+
+    public void setDamage(UUID uuid, int damage) {
+        String path = "Players." + uuid.toString() + ".Damage";
+        set(path, damage);
     }
 
     public void setStrength(UUID uuid, int strength) {

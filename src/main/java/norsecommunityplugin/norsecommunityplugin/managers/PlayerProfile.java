@@ -8,6 +8,8 @@ public class PlayerProfile {
     private int level;
     private int xp;
     private int protection;
+
+    private int damage;
     private int dexterity;
     private int strength;
     private int intelligence;
@@ -53,6 +55,14 @@ public class PlayerProfile {
 
     public void setProtection(int protection) {
         this.protection = protection;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
     public int getDexterity() {

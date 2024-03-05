@@ -57,12 +57,22 @@ public class HealthSystem {
         }
     }
 
+    //Calculate damage based on player stats
+    public int calculateDamage(PlayerProfile profile){
+
+
+        return 0;
+    }
+
     public double calculateMaxHealth(PlayerProfile profile){
         int level = profile.getLevel();
-        double baseHP = plugin.getConfig().getInt("Levels." + level + ".HP");
+        //Temporary fix for testing purposes
+        if (profile.getMaxHP() > plugin.getConfig().getInt("Levels." + level + ".HP")){
+            return profile.getMaxHP();
+        } else {
+            return plugin.getConfig().getInt("Levels." + level + ".HP");
+        }
         //TODO: Add more factors to the health calculation (e.g. class, armor, etc.)
-
-        return baseHP;
     }
 
     public void healPlayer(Player player, double amount){

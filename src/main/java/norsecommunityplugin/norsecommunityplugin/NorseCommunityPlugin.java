@@ -2,6 +2,7 @@ package norsecommunityplugin.norsecommunityplugin;
 
 
 
+import norsecommunityplugin.norsecommunityplugin.Configs.PlayerClassConfig;
 import norsecommunityplugin.norsecommunityplugin.Configs.PlayerConfig;
 import norsecommunityplugin.norsecommunityplugin.Events.DamageEvents;
 import norsecommunityplugin.norsecommunityplugin.HealthSystem.HealthRegenTask;
@@ -11,8 +12,10 @@ import norsecommunityplugin.norsecommunityplugin.LevelingSystem.EXPGivers;
 import norsecommunityplugin.norsecommunityplugin.LevelingSystem.LevelHandler;
 import norsecommunityplugin.norsecommunityplugin.Listeners.GoodWeather;
 import norsecommunityplugin.norsecommunityplugin.Listeners.JoinQuitListener;
+import norsecommunityplugin.norsecommunityplugin.Listeners.WarriorAbilityListener;
 import norsecommunityplugin.norsecommunityplugin.Tasks.KeepDayTask;
 import norsecommunityplugin.norsecommunityplugin.commands.*;
+import norsecommunityplugin.norsecommunityplugin.commands.Testing.*;
 import norsecommunityplugin.norsecommunityplugin.folders.DataFolder;
 import norsecommunityplugin.norsecommunityplugin.managers.ConfigManager;
 import norsecommunityplugin.norsecommunityplugin.managers.PlayerProfileManager;
@@ -36,7 +39,7 @@ public final class NorseCommunityPlugin extends JavaPlugin {
     private PlayerProfileManager playerProfileManager;
     private LevelHandler levelHandler;
     private PlayerConfig playerConfig;
-
+    private PlayerClassConfig playerClassConfig;
     private HealthSystem healthSystem;
 
     @Override
@@ -48,6 +51,7 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         //Registering config
         saveDefaultConfig();
         playerConfig = PlayerConfig.getInstance(this);
+        playerClassConfig = PlayerClassConfig.getInstance(this);
 
         //Server settings
         Bukkit.getWorlds().get(0).setGameRule(GameRule.NATURAL_REGENERATION, false);
@@ -70,6 +74,13 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         getCommand("classmenu").setExecutor(new ClassMenu(this));
         getCommand("stats").setExecutor(new StatsCommand(this));
         getCommand("dagger").setExecutor(new GetDagger());
+        //Testing commands
+        getCommand("sethp").setExecutor(new SetHP(this));
+        getCommand("setdamage").setExecutor(new SetDamage(this));
+        getCommand("setdexterity").setExecutor(new SetDexterity(this));
+        getCommand("setprotection").setExecutor(new SetProtection(this));
+        getCommand("setclass").setExecutor(new SetClass(this));
+
 
 
         //Events
@@ -79,13 +90,9 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         HealthRegenTask healthRegenTask = new HealthRegenTask(this);
         Bukkit.getScheduler().runTaskTimer(this, healthRegenTask, 0L, 100L);
 
-
-
-
-
-
         //Registering listeners
         getServer().getPluginManager().registerEvents(new GoodWeather(), this);
+        getServer().getPluginManager().registerEvents(new WarriorAbilityListener(this), this);
         BukkitTask keepDayTask = new KeepDayTask(this).runTaskTimer(this, 0L, 100L);
 
         //Registering managers

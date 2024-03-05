@@ -46,9 +46,15 @@ public class StatsCommand implements CommandExecutor {
             if (profile != null) {
                 int xpNeeded = this.plugin.getConfig().getInt("Levels." + profile.getLevel() + ".XP");
                 sender.sendMessage("Stats for " + targetPlayer.getName() + ":");
+                sender.sendMessage("Class: " + profile.getPlayerClass());
                 sender.sendMessage("Level: " + profile.getLevel());
                 sender.sendMessage("XP: " + profile.getXP() + "/" + xpNeeded);
-                sender.sendMessage("HP: " + profile.getCurrentHP() + "/" + profile.getMaxHP());
+                sender.sendMessage("HP: " + (int)profile.getCurrentHP() + "/" + profile.getMaxHP());
+                sender.sendMessage("Mana: " + (int)profile.getCurrentMana() + "/" + profile.getMaxMana());
+                sender.sendMessage("Damage: " + profile.getDamage());
+                sender.sendMessage("Protection: " + profile.getProtection());
+                //Strength, Dexterity, Wisdom, Intelligence, on the same row
+                sender.sendMessage("Strength: " + profile.getStrength() + " Dexterity: " + profile.getDexterity() + " Wisdom: " + profile.getWisdom() + " Intelligence: " + profile.getIntelligence());
                 // Add more stats as needed
             } else {
                 sender.sendMessage("Could not find stats for " + targetPlayer.getName());

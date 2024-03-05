@@ -39,3 +39,28 @@ commands:
     description: Shows your stats
     usage: /stats <player> or /stats
     permission: norsecommunityplugin.stats
+
+  sethp:
+    description: Sets the health of a player
+    usage: /sethp <player> <health>
+    permission: norsecommunityplugin.sethp
+
+  setdamage:
+    description: Sets the damage of a player
+    usage: /setdamage <player> <damage>
+    permission: norsecommunityplugin.setdamage
+
+  setprotection:
+    description: Sets the protection of a player
+    usage: /setprotection <player> <protection>
+    permission: norsecommunityplugin.setprotection
+
+  setdexterity:
+    description: Sets the dexterity of a player
+    usage: /setdexterity <player> <dexterity>
+    permission: norsecommunityplugin.setdexterity
+
+  setclass:
+    description: Sets the class of a player
+    usage: /setclass <player> <class>
+    permission: norsecommunityplugin.setclass

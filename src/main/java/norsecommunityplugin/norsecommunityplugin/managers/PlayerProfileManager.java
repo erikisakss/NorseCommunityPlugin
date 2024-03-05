@@ -47,6 +47,12 @@ public class PlayerProfileManager {
             profile.setCurrentHP(playerConfig.getCurrentHP(uuid));
             profile.setMaxMana(playerConfig.getMaxMana(uuid));
             profile.setCurrentMana(playerConfig.getCurrentMana(uuid));
+            profile.setDamage(playerConfig.getDamage(uuid));
+            profile.setProtection(playerConfig.getProtection(uuid));
+            profile.setStrength(playerConfig.getStrength(uuid));
+            profile.setWisdom(playerConfig.getWisdom(uuid));
+            profile.setIntelligence(playerConfig.getIntelligence(uuid));
+            profile.setDexterity(playerConfig.getDexterity(uuid));
             profile.setNation(playerConfig.getNation(uuid));
             profile.setClan(playerConfig.getClan(uuid));
             profile.setPlayerClass(playerConfig.getPlayerClass(uuid));
@@ -75,6 +81,12 @@ public class PlayerProfileManager {
             playerConfig.setCurrentHP(profile.getUUID(), profile.getCurrentHP());
             playerConfig.setMaxMana(profile.getUUID(), profile.getMaxMana());
             playerConfig.setCurrentMana(profile.getUUID(), profile.getCurrentMana());
+            playerConfig.setDamage(profile.getUUID(), profile.getDamage());
+            playerConfig.setProtection(profile.getUUID(), profile.getProtection());
+            playerConfig.setStrength(profile.getUUID(), profile.getStrength());
+            playerConfig.setWisdom(profile.getUUID(), profile.getWisdom());
+            playerConfig.setIntelligence(profile.getUUID(), profile.getIntelligence());
+            playerConfig.setDexterity(profile.getUUID(), profile.getDexterity());
             playerConfig.setNation(profile.getUUID(), profile.getNation());
             playerConfig.setClan(profile.getUUID(), profile.getClan());
             playerConfig.setPlayerClass(profile.getUUID(), profile.getPlayerClass());
