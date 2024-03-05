@@ -80,6 +80,56 @@ public class PlayerConfig extends Config{
         return getDouble(path);
     }
 
+    public int getProtection(UUID uuid) {
+        String path = "Players." + uuid.toString() + ".Protection";
+        return getInt(path);
+    }
+
+    public int getStrength(UUID uuid) {
+        String path = "Players." + uuid.toString() + ".Strength";
+        return getInt(path);
+    }
+
+    public int getWisdom(UUID uuid) {
+        String path = "Players." + uuid.toString() + ".Wisdom";
+        return getInt(path);
+    }
+
+    public int getIntelligence(UUID uuid) {
+        String path = "Players." + uuid.toString() + ".Intelligence";
+        return getInt(path);
+    }
+
+    public int getDexterity(UUID uuid) {
+        String path = "Players." + uuid.toString() + ".Dexterity";
+        return getInt(path);
+    }
+
+    public void setProtection(UUID uuid, int protection) {
+        String path = "Players." + uuid.toString() + ".Protection";
+        set(path, protection);
+    }
+
+    public void setStrength(UUID uuid, int strength) {
+        String path = "Players." + uuid.toString() + ".Strength";
+        set(path, strength);
+    }
+
+    public void setWisdom(UUID uuid, int wisdom) {
+        String path = "Players." + uuid.toString() + ".Wisdom";
+        set(path, wisdom);
+    }
+
+    public void setIntelligence(UUID uuid, int intelligence) {
+        String path = "Players." + uuid.toString() + ".Intelligence";
+        set(path, intelligence);
+    }
+
+    public void setDexterity(UUID uuid, int dexterity) {
+        String path = "Players." + uuid.toString() + ".Dexterity";
+        set(path, dexterity);
+    }
+
     public void setMaxHP(UUID uuid, double maxHP) {
         String path = "Players." + uuid.toString() + ".MaxHP";
         set(path, maxHP);

@@ -39,6 +39,10 @@ public class HealthSystem {
 
     public void takeDamage(Player player, double damage){
         PlayerProfile profile = playerProfileManager.getOrCreateProfile(player);
+
+        //TODO: Calculate damage value based on armor, resistances, armor penetration, etc.
+
+
         double newHealth = profile.getCurrentHP() - damage;
 
         if (newHealth <= 0) {
@@ -56,7 +60,7 @@ public class HealthSystem {
     public double calculateMaxHealth(PlayerProfile profile){
         int level = profile.getLevel();
         double baseHP = plugin.getConfig().getInt("Levels." + level + ".HP");
-        //TODO: Add more factors to the health calculation
+        //TODO: Add more factors to the health calculation (e.g. class, armor, etc.)
 
         return baseHP;
     }

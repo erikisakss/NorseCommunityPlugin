@@ -74,9 +74,6 @@ public class LevelHandler implements Listener {
            int xpNeeded = this.plugin.getConfig().getInt("Levels.1.XP");
 
 
-
-
-
             this.ScoreBoard(player, profile.getLevel(), profile.getXP(), xpNeeded);
         }else {
             PlayerProfile profile = playerProfileManager.getOrCreateProfile(player);

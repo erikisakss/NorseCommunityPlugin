@@ -7,6 +7,12 @@ public class PlayerProfile {
     private final UUID uuid;
     private int level;
     private int xp;
+    private int protection;
+    private int dexterity;
+    private int strength;
+    private int intelligence;
+    private int wisdom;
+
     private double maxHP;
     private double maxMana;
     private double currentHP;
@@ -39,6 +45,46 @@ public class PlayerProfile {
 
     public void setXP(int xp) {
         this.xp = xp;
+    }
+
+    public int getProtection() {
+        return protection;
+    }
+
+    public void setProtection(int protection) {
+        this.protection = protection;
+    }
+
+    public int getDexterity() {
+        return dexterity;
+    }
+
+    public void setDexterity(int dexterity) {
+        this.dexterity = dexterity;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public int getIntelligence() {
+        return intelligence;
+    }
+
+    public void setIntelligence(int intelligence) {
+        this.intelligence = intelligence;
+    }
+
+    public int getWisdom() {
+        return wisdom;
+    }
+
+    public void setWisdom(int wisdom) {
+        this.wisdom = wisdom;
     }
 
     // Metoder för att hantera nation, clan, playerClass...
