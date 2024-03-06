@@ -1,5 +1,6 @@
 package norsecommunityplugin.norsecommunityplugin.HealthSystem;
 
+import norsecommunityplugin.norsecommunityplugin.Configs.PlayerClassConfig;
 import norsecommunityplugin.norsecommunityplugin.NorseCommunityPlugin;
 import norsecommunityplugin.norsecommunityplugin.managers.PlayerProfile;
 import norsecommunityplugin.norsecommunityplugin.managers.PlayerProfileManager;
@@ -12,10 +13,12 @@ public class HealthSystem {
     private NorseCommunityPlugin plugin;
     private PlayerProfileManager playerProfileManager;
     private static HealthSystem instance;
+    private PlayerClassConfig playerClassConfig;
 
     public HealthSystem(NorseCommunityPlugin plugin) {
         this.plugin = plugin;
         this.playerProfileManager = PlayerProfileManager.getInstance(this.plugin);
+        this.playerClassConfig = PlayerClassConfig.getInstance(this.plugin);
 
     }
     public static HealthSystem getInstance(NorseCommunityPlugin plugin){
@@ -28,6 +31,7 @@ public class HealthSystem {
     public void updatePlayerHealth(Player player){
         PlayerProfile profile = playerProfileManager.getOrCreateProfile(player);
         double maxHealth = calculateMaxHealth(profile);
+        Bukkit.getLogger().info("Max Health in updatePlayerHealth: " + maxHealth);
         profile.setMaxHP(maxHealth);
 
         if (profile.getCurrentHP() > maxHealth){
@@ -67,11 +71,14 @@ public class HealthSystem {
     public double calculateMaxHealth(PlayerProfile profile){
         int level = profile.getLevel();
         //Temporary fix for testing purposes
-        if (profile.getMaxHP() > plugin.getConfig().getInt("Levels." + level + ".HP")){
-            return profile.getMaxHP();
-        } else {
-            return plugin.getConfig().getInt("Levels." + level + ".HP");
+        double levelBase = plugin.getConfig().getInt(("Levels." + level + ".HP"));
+        //If player has a class, add class HP bonus
+        Bukkit.getLogger().info("Class: " + profile.getPlayerClass());
+        if (profile.getPlayerClass() != "None"){
+            levelBase = levelBase * playerClassConfig.getClassHP(profile.getPlayerClass());
+            Bukkit.getLogger().info("Class HP: " + playerClassConfig.getClassHP(profile.getPlayerClass()));
         }
+        return levelBase;
         //TODO: Add more factors to the health calculation (e.g. class, armor, etc.)
     }
 

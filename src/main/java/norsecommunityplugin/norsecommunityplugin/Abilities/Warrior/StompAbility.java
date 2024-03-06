@@ -2,6 +2,7 @@ package norsecommunityplugin.norsecommunityplugin.Abilities.Warrior;
 
 import norsecommunityplugin.norsecommunityplugin.Abilities.Ability;
 import norsecommunityplugin.norsecommunityplugin.NorseCommunityPlugin;
+import norsecommunityplugin.norsecommunityplugin.managers.CooldownManager;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,8 +20,8 @@ public class StompAbility extends Ability {
 
         @Override
         public void activate() {
-            if (isOnCooldown()) {
-                long timeLeft = (cooldowns.get(player.getUniqueId()) - System.currentTimeMillis()) / 1000;
+            if (CooldownManager.isOnCooldown(player.getUniqueId(), this.name)) {
+                long timeLeft = (CooldownManager.getCooldown(player.getUniqueId(), this.name) - System.currentTimeMillis()) / 1000;
                 player.sendMessage("Ability is on cooldown for " + timeLeft + " seconds.");
                 return;
             }
@@ -33,7 +34,7 @@ public class StompAbility extends Ability {
             });
             // Play sound and particles
             player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
-            startCooldown();
+            CooldownManager.setCooldown(player.getUniqueId(), this.name, this.cooldown);
 
         }
 }

@@ -1,5 +1,6 @@
 package norsecommunityplugin.norsecommunityplugin.commands.Testing;
 
+import norsecommunityplugin.norsecommunityplugin.HealthSystem.HealthSystem;
 import norsecommunityplugin.norsecommunityplugin.NorseCommunityPlugin;
 import norsecommunityplugin.norsecommunityplugin.managers.PlayerProfile;
 import norsecommunityplugin.norsecommunityplugin.managers.PlayerProfileManager;
@@ -13,9 +14,11 @@ public class SetClass implements CommandExecutor {
 
     private PlayerProfileManager playerProfileManager;
     private NorseCommunityPlugin plugin;
+    private HealthSystem healthSystem;
 
     public SetClass(NorseCommunityPlugin plugin) {
         this.playerProfileManager = PlayerProfileManager.getInstance(this.plugin);
+        this.healthSystem = HealthSystem.getInstance(this.plugin);
         this.plugin = plugin;
     }
     @Override
@@ -40,6 +43,9 @@ public class SetClass implements CommandExecutor {
 
         PlayerProfile profile = playerProfileManager.getOrCreateProfile(target);
         profile.setPlayerClass(playerClass);
+
+        healthSystem.updatePlayerHealth(target);
+        Bukkit.getLogger().info("Called updatePlayerHealth");
         playerProfileManager.updateProfile(profile);
         sender.sendMessage("Set " + target.getName() + "'s class to " + playerClass + ".");
         return true;

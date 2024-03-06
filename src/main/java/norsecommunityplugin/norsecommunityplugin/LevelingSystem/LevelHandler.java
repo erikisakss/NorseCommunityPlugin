@@ -114,33 +114,43 @@ public class LevelHandler implements Listener {
     }
 
 
-    public void EXPCheck(Player player){
-        int PlayerLevel = playerProfileManager.getProfile(player.getUniqueId()).getLevel();
-
-        int xpNeeded = this.plugin.getConfig().getInt("Levels."+ PlayerLevel + ".XP");
-        Bukkit.getLogger().info("XP needed: " + xpNeeded);
-
+    public void EXPCheck(Player player) {
+        boolean leveledUp = false; // Track if the player leveled up
+        int level = playerProfileManager.getProfile(player.getUniqueId()).getLevel();
         int xp = playerProfileManager.getProfile(player.getUniqueId()).getXP();
-        Bukkit.getLogger().info("XP: " + xp);
-        player.setExp(Math.min(1.0f, Math.max(0.0f, ((float) xp / (float) xpNeeded) * 1.0f)));
-        ScoreBoard(player, PlayerLevel, xp, xpNeeded);
-        if (xp >= xpNeeded){
-            int level = playerProfileManager.getProfile(player.getUniqueId()).getLevel();
-            int newLevel = level + 1;
-            playerProfileManager.getProfile(player.getUniqueId()).setLevel(newLevel);
-            int newXP = xp - xpNeeded;
-            playerProfileManager.getProfile(player.getUniqueId()).setXP(newXP);
-            healthSystem.updatePlayerHealth(player);
-            int newXPNeeded = this.plugin.getConfig().getInt("Levels."+ newLevel + ".XP");
-            player.setLevel(newLevel);
-            player.setExp(Math.min(1.0f, Math.max(0.0f, ((float) newXP / (float) newXPNeeded) * 1.0f)));
-            this.ScoreBoard(player, newLevel, newXP, newXPNeeded);
-            player.sendMessage("You are now level " + newLevel);
+
+        while (true) {
+            int xpNeeded = this.plugin.getConfig().getInt("Levels." + level + ".XP");
+            Bukkit.getLogger().info("XP needed for level " + level + ": " + xpNeeded);
+            Bukkit.getLogger().info("Current XP: " + xp);
+
+            // Update player's experience bar
+            player.setExp(Math.min(1.0f, ((float) xp / (float) xpNeeded)));
+
+            if (xp >= xpNeeded) {
+                leveledUp = true; // Player leveled up
+                level++; // Increase level
+                xp -= xpNeeded; // Subtract XP needed for the level-up
+                playerProfileManager.getProfile(player.getUniqueId()).setLevel(level);
+                playerProfileManager.getProfile(player.getUniqueId()).setXP(xp);
+                // Log level up event
+                Bukkit.getLogger().info("Player leveled up to: " + level);
+            } else {
+                // If not enough XP for another level, break the loop
+                break;
+            }
         }
 
-
-
-
+        if (leveledUp) {
+            // If the player leveled up, update their health and score board once
+            healthSystem.updatePlayerHealth(player);
+            int newXPNeeded = this.plugin.getConfig().getInt("Levels." + level + ".XP");
+            player.setLevel(level);
+            player.setExp(Math.min(1.0f, ((float) xp / (float) newXPNeeded)));
+            this.ScoreBoard(player, level, xp, newXPNeeded);
+            player.sendMessage("You are now level " + level);
+        }
     }
+
 }
 

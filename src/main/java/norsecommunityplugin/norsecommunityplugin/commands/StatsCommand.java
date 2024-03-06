@@ -49,7 +49,7 @@ public class StatsCommand implements CommandExecutor {
                 sender.sendMessage("Class: " + profile.getPlayerClass());
                 sender.sendMessage("Level: " + profile.getLevel());
                 sender.sendMessage("XP: " + profile.getXP() + "/" + xpNeeded);
-                sender.sendMessage("HP: " + (int)profile.getCurrentHP() + "/" + profile.getMaxHP());
+                sender.sendMessage("HP: " + (int)profile.getCurrentHP() + "/" + (int)profile.getMaxHP());
                 sender.sendMessage("Mana: " + (int)profile.getCurrentMana() + "/" + profile.getMaxMana());
                 sender.sendMessage("Damage: " + profile.getDamage());
                 sender.sendMessage("Protection: " + profile.getProtection());

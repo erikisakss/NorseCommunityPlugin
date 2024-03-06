@@ -18,6 +18,7 @@ import norsecommunityplugin.norsecommunityplugin.commands.*;
 import norsecommunityplugin.norsecommunityplugin.commands.Testing.*;
 import norsecommunityplugin.norsecommunityplugin.folders.DataFolder;
 import norsecommunityplugin.norsecommunityplugin.managers.ConfigManager;
+import norsecommunityplugin.norsecommunityplugin.managers.CooldownManager;
 import norsecommunityplugin.norsecommunityplugin.managers.PlayerProfileManager;
 
 import org.bukkit.Bukkit;
@@ -26,6 +27,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 
@@ -89,6 +91,13 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         //Starting tasks
         HealthRegenTask healthRegenTask = new HealthRegenTask(this);
         Bukkit.getScheduler().runTaskTimer(this, healthRegenTask, 0L, 100L);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                CooldownManager.cleanupExpiredCooldowns();
+            }
+        }.runTaskTimerAsynchronously(this, 20L * 60, 20L * 60);
 
         //Registering listeners
         getServer().getPluginManager().registerEvents(new GoodWeather(), this);

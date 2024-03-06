@@ -59,7 +59,7 @@ public class EXPGivers implements Listener {
         Block block = event.getBlock();
         if (block.getType() == block.getType().STONE){
             Bukkit.getLogger().info(player.getDisplayName() + " broke a stone block");
-            playerProfileManager.getProfile(player.getUniqueId()).setXP(playerProfileManager.getProfile(player.getUniqueId()).getXP() + 10);
+            playerProfileManager.getProfile(player.getUniqueId()).setXP(playerProfileManager.getProfile(player.getUniqueId()).getXP() + 1000);
             player.sendMessage("§9You got 10 XP!");
             levelHandler.EXPCheck(player);
         }
