@@ -64,3 +64,8 @@ commands:
     description: Sets the class of a player
     usage: /setclass <player> <class>
     permission: norsecommunityplugin.setclass
+
+  giveitem:
+    description: Gives an item to a player
+    usage: /giveitem <name>
+    permission: norsecommunityplugin.giveitem

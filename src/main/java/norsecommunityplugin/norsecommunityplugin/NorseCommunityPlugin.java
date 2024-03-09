@@ -11,6 +11,7 @@ import norsecommunityplugin.norsecommunityplugin.LevelingSystem.EXPGivers;
 
 import norsecommunityplugin.norsecommunityplugin.LevelingSystem.LevelHandler;
 import norsecommunityplugin.norsecommunityplugin.Listeners.GoodWeather;
+import norsecommunityplugin.norsecommunityplugin.Listeners.HeldItemListener;
 import norsecommunityplugin.norsecommunityplugin.Listeners.JoinQuitListener;
 import norsecommunityplugin.norsecommunityplugin.Listeners.WarriorAbilityListener;
 import norsecommunityplugin.norsecommunityplugin.Tasks.KeepDayTask;
@@ -19,6 +20,7 @@ import norsecommunityplugin.norsecommunityplugin.commands.Testing.*;
 import norsecommunityplugin.norsecommunityplugin.folders.DataFolder;
 import norsecommunityplugin.norsecommunityplugin.managers.ConfigManager;
 import norsecommunityplugin.norsecommunityplugin.managers.CooldownManager;
+import norsecommunityplugin.norsecommunityplugin.managers.ItemManager;
 import norsecommunityplugin.norsecommunityplugin.managers.PlayerProfileManager;
 
 import org.bukkit.Bukkit;
@@ -66,6 +68,8 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         EXPGivers expGivers = new EXPGivers(this);
         Bukkit.getServer().getPluginManager().registerEvents(expGivers, this);
 
+
+
         //Registering HP system
         healthSystem = HealthSystem.getInstance(this);
 
@@ -82,6 +86,7 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         getCommand("setdexterity").setExecutor(new SetDexterity(this));
         getCommand("setprotection").setExecutor(new SetProtection(this));
         getCommand("setclass").setExecutor(new SetClass(this));
+        getCommand("giveitem").setExecutor(new GiveItem(this));
 
 
 
@@ -102,6 +107,7 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         //Registering listeners
         getServer().getPluginManager().registerEvents(new GoodWeather(), this);
         getServer().getPluginManager().registerEvents(new WarriorAbilityListener(this), this);
+        getServer().getPluginManager().registerEvents(new HeldItemListener(this), this);
         BukkitTask keepDayTask = new KeepDayTask(this).runTaskTimer(this, 0L, 100L);
 
         //Registering managers
@@ -110,6 +116,10 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         playerProfileManager = PlayerProfileManager.getInstance(this);
 
 
+
+        //Filling Item cache
+        ItemManager itemManager = ItemManager.getInstance(this);
+        itemManager.preloadItems();
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new JoinQuitListener(this), this);

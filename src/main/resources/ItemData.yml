@@ -1,0 +1,38 @@
+items:
+  Dagger:
+    type: "Weapon"
+    itemGrade: "Low"
+    rarity: "Common"
+    playerClass: "Assassin"
+    material: "SHEARS"
+    attackSpeed: "Fast"
+    price: 100.00
+    effectiveRange: 1.00
+    damageTypes:
+      - "Poison"
+    requiredLevel: 1
+    upgrades:
+      attackPower:
+        1: 6
+        2: 10
+        3: 14
+        4: 18
+        5: 22
+        6: 26
+        7: 32
+        8: 41
+        9: 54
+        10: 74
+      damageUpgrades:
+        1: 10
+        2: 20
+        3: 30
+        4: 40
+        5: 50
+        6: 60
+        7: 70
+        8: 80
+        9: 90
+        10: 100
+
+
