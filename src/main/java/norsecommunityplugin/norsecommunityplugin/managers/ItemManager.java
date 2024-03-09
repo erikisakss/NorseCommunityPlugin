@@ -3,17 +3,17 @@ package norsecommunityplugin.norsecommunityplugin.managers;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import norsecommunityplugin.norsecommunityplugin.Configs.ItemsConfig;
-import norsecommunityplugin.norsecommunityplugin.Items.AccessoryBlueprint;
-import norsecommunityplugin.norsecommunityplugin.Items.ArmorBlueprint;
-import norsecommunityplugin.norsecommunityplugin.Items.ItemBlueprint;
-import norsecommunityplugin.norsecommunityplugin.Items.WeaponBlueprint;
+import norsecommunityplugin.norsecommunityplugin.Items.*;
 import norsecommunityplugin.norsecommunityplugin.NorseCommunityPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -23,6 +23,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ItemManager {
 
@@ -66,7 +68,17 @@ public class ItemManager {
 
     public ItemStack getItem(String itemName) {
         // Get an item from the cache
-        return itemCache.get(itemName);
+        if (itemCache.containsKey(itemName)) {
+            return itemCache.get(itemName);
+        } else {
+            Bukkit.getLogger().info("Item not found in cache: " + itemName);
+            ItemBlueprint blueprint = itemBlueprintCache.get(itemName);
+            Bukkit.getLogger().info("Blueprint: " + blueprint);
+            if (blueprint != null) {
+                return createItemStackFromBlueprint(blueprint);
+            }
+        }
+        return null;
     }
 
     public int calculateDamageForHeldWeapon(Player player, ItemStack heldItem) {
@@ -148,6 +160,10 @@ public class ItemManager {
         Bukkit.getLogger().info("Preloading items complete.");
     }
 
+   public ItemBlueprint getItemBlueprint(String itemName) {
+        return itemBlueprintCache.get(itemName);
+    }
+
     public ItemStack createItemStackFromBlueprint(ItemBlueprint blueprint) {
         // Create an item stack from the blueprint
 
@@ -158,6 +174,9 @@ public class ItemManager {
                 return createWeaponItemStack((WeaponBlueprint) blueprint);
             case "Armor":
                 return null; // Similarly for armor
+            case "Scroll":
+                Bukkit.getLogger().info("Creating scroll item stack");
+                return createScrollItemStack((ScrollBlueprint) blueprint);
             case "Accessory":
                 return null; // Similarly for accessory
             default:
@@ -165,6 +184,43 @@ public class ItemManager {
         }
     }
 
+    private ItemStack createScrollItemStack(ScrollBlueprint blueprint) {
+
+        ItemStack item = new ItemStack(Material.valueOf(blueprint.getMaterial()));
+        ItemMeta meta = item.getItemMeta();
+        String name = blueprint.getName();
+        name = name.replace("_", " ");
+        meta.displayName(formatRarity(name, blueprint.getRarity()));
+        meta.setUnbreakable(true);
+        if (blueprint.getItemGrade().equalsIgnoreCase("Blessed")) {
+            meta.addEnchant(Enchantment.LUCK, 1, true);
+        }
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
+
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text(blueprint.getType()).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.empty());
+        lore.add(Component.text("Item Grade: " + blueprint.getItemGrade() + " Class").color(NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.empty());
+        lore.add(Component.empty());
+
+        meta.lore(lore);
+
+        NamespacedKey typeKey = new NamespacedKey(plugin, "type");
+        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, blueprint.getType());
+
+        NamespacedKey scrollTypeKey = new NamespacedKey(plugin, "scroll_type");
+        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, blueprint.getScrollType());
+
+        NamespacedKey gradeKey = new NamespacedKey(plugin, "scroll_grade");
+        meta.getPersistentDataContainer().set(gradeKey, PersistentDataType.STRING, blueprint.getItemGrade());
+
+        NamespacedKey idKey = new NamespacedKey(plugin, "scroll_id");
+        meta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, blueprint.getName());
+
+        item.setItemMeta(meta);
+        return item;
+    }
     private ItemStack createWeaponItemStack(WeaponBlueprint blueprint) {
 
         ItemStack item = new ItemStack(Material.valueOf(blueprint.getMaterial()));
@@ -206,8 +262,14 @@ public class ItemManager {
         AttributeModifier attackSpeedModifier = new AttributeModifier("generic.attackSpeed", mapAttackSpeedToValue(blueprint.getAttackSpeed()), AttributeModifier.Operation.ADD_NUMBER);
         meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, attackSpeedModifier);
 
+        NamespacedKey typeKey = new NamespacedKey(plugin, "type");
+        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, blueprint.getType());
+
         NamespacedKey levelKey = new NamespacedKey(plugin, "weapon_level");
         meta.getPersistentDataContainer().set(levelKey, PersistentDataType.INTEGER, blueprint.getLevel());
+
+        NamespacedKey gradeKey = new NamespacedKey(plugin, "weapon_grade");
+        meta.getPersistentDataContainer().set(gradeKey, PersistentDataType.STRING, blueprint.getItemGrade());
 
         NamespacedKey idKey = new NamespacedKey(plugin, "weapon_id");
         meta.getPersistentDataContainer().set(idKey, PersistentDataType.STRING, blueprint.getName());
@@ -250,8 +312,14 @@ public class ItemManager {
 
         meta.lore(lore);
 
+        NamespacedKey typeKey = new NamespacedKey(plugin, "type");
+        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, blueprint.getType());
+
         NamespacedKey statTypeKey = new NamespacedKey(plugin, "armor_stat_type");
         meta.getPersistentDataContainer().set(statTypeKey, PersistentDataType.STRING, statType);
+
+        NamespacedKey armorGradeKey = new NamespacedKey(plugin, "armor_grade");
+        meta.getPersistentDataContainer().set(armorGradeKey, PersistentDataType.STRING, blueprint.getItemGrade());
 
         NamespacedKey levelKey = new NamespacedKey(plugin, "armor_level");
         meta.getPersistentDataContainer().set(levelKey, PersistentDataType.INTEGER, blueprint.getLevel());
@@ -263,7 +331,7 @@ public class ItemManager {
         return item;
     }
 
-    private Component formatExtraDamage(String type, int damage) {
+    public Component formatExtraDamage(String type, int damage) {
         // Format the extra damage based on its type
         switch (type) {
             case "Flame":
@@ -294,6 +362,27 @@ public class ItemManager {
             default:
                 return 0.0; // Default to normal speed if unspecified
         }
+    }
+
+    public Component updateDisplayNameWithNewLevel(Component currentDisplayName, int newLevel, String rarity) {
+        // Extract base item name from the current display name
+        String baseItemName = getBaseItemName(currentDisplayName);
+        // Construct the new display name with the updated level
+        String newName = baseItemName + " (+" + newLevel + ")";
+        // Apply rarity formatting to the new display name
+        return formatRarity(newName, rarity);
+    }
+
+    private String getBaseItemName(Component displayName) {
+        String displayNameText = PlainTextComponentSerializer.plainText().serialize(displayName);
+        // Use a regex pattern to extract the base item name
+        Pattern pattern = Pattern.compile("(.+) \\(\\+\\d+\\)");
+        Matcher matcher = pattern.matcher(displayNameText);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+
+        return displayNameText;
     }
 
     private Component formatRarity(String name, String rarity) {

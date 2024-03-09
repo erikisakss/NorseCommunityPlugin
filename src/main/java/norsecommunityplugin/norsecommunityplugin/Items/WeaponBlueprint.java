@@ -53,6 +53,10 @@ public class WeaponBlueprint extends ItemBlueprint {
         return attackSpeed;
     }
 
+    public int getExtraDamageUpgrade(int level) {
+        return extraDamageUpgrade.get(level);
+    }
+
     public Map<Integer, Integer> getAttackPower() {
         return attackPower;
     }

@@ -1,4 +1,77 @@
 items:
+
+  Low_Scroll:
+    type: "Scroll"
+    itemGrade: "Low"
+    material: "PAPER"
+    rarity: "Common"
+    scrollType: "Upgrade"
+    price: 100.00
+
+  Medium_Scroll:
+    type: "Scroll"
+    itemGrade: "Medium"
+    material: "PAPER"
+    rarity: "Uncommon"
+    scrollType: "Upgrade"
+    price: 200.00
+
+  High_Scroll:
+    type: "Scroll"
+    itemGrade: "High"
+    material: "PAPER"
+    rarity: "Rare"
+    scrollType: "Upgrade"
+    price: 300.00
+
+  Blessed_Scroll:
+    type: "Scroll"
+    itemGrade: "Blessed"
+    material: "PAPER"
+    rarity: "Epic"
+    scrollType: "Upgrade"
+    price: 400.00
+
+  Health_Scroll:
+    type: "Scroll"
+    itemGrade: "Low"
+    material: "PAPER"
+    rarity: "Common"
+    scrollType: "Health"
+    price: 100.00
+
+  Dexterity_Scroll:
+    type: "Scroll"
+    itemGrade: "Low"
+    material: "PAPER"
+    rarity: "Common"
+    scrollType: "Dexterity"
+    price: 100.00
+
+  Strength_Scroll:
+    type: "Scroll"
+    itemGrade: "Low"
+    material: "PAPER"
+    rarity: "Common"
+    scrollType: "Strength"
+    price: 100.00
+
+  Intelligence_Scroll:
+    type: "Scroll"
+    itemGrade: "Low"
+    material: "PAPER"
+    rarity: "Common"
+    scrollType: "Intelligence"
+    price: 100.00
+
+  Magic_Power_Scroll:
+    type: "Scroll"
+    itemGrade: "Low"
+    material: "PAPER"
+    rarity: "Common"
+    scrollType: "Magic Power"
+    price: 100.00
+
   Dagger:
     type: "Weapon"
     itemGrade: "Low"

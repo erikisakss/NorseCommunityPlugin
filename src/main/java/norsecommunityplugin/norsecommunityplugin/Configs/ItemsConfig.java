@@ -2,6 +2,7 @@ package norsecommunityplugin.norsecommunityplugin.Configs;
 
 import norsecommunityplugin.norsecommunityplugin.Items.ArmorBlueprint;
 import norsecommunityplugin.norsecommunityplugin.Items.ItemBlueprint;
+import norsecommunityplugin.norsecommunityplugin.Items.ScrollBlueprint;
 import norsecommunityplugin.norsecommunityplugin.Items.WeaponBlueprint;
 import norsecommunityplugin.norsecommunityplugin.NorseCommunityPlugin;
 import org.bukkit.Bukkit;
@@ -39,6 +40,8 @@ public class ItemsConfig extends Config{
                 return getWeaponBlueprint(itemName);
             case "Armor":
                 return getArmorBlueprint(itemName);
+            case "Scroll":
+                return getScrollBlueprint(itemName);
             case "Accessory":
                 return null; // Similarly for accessory
         }
@@ -109,6 +112,25 @@ public class ItemsConfig extends Config{
             }
 
             return new ArmorBlueprint(name, type, rarity, material, level, requiredLevel, price, itemGrade, protection, statBonusTypes, statBonus);
+        }
+
+        public ScrollBlueprint getScrollBlueprint(String itemName) {
+            ConfigurationSection itemSection = getConfigurationSection("items." + itemName);
+            if (itemSection == null || !itemSection.getString("type").equalsIgnoreCase("Scroll")) {
+                return null;
+            }
+            String name = itemName;
+            int level = 1;
+            String type = itemSection.getString("type");
+            String rarity = itemSection.getString("rarity");
+            String material = itemSection.getString("material");
+            int requiredLevel = 0;
+            double price = itemSection.getDouble("price");
+            String scrollType = itemSection.getString("scrollType");
+            String itemGrade = itemSection.getString("itemGrade");
+            String stat = itemSection.getString("stat");
+
+            return new ScrollBlueprint(name, type, rarity, material, level, requiredLevel, price, scrollType, itemGrade, stat);
         }
 
         public void createWeaponBlueprint(WeaponBlueprint weaponBlueprint) {

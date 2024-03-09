@@ -10,10 +10,7 @@ import norsecommunityplugin.norsecommunityplugin.HealthSystem.HealthSystem;
 import norsecommunityplugin.norsecommunityplugin.LevelingSystem.EXPGivers;
 
 import norsecommunityplugin.norsecommunityplugin.LevelingSystem.LevelHandler;
-import norsecommunityplugin.norsecommunityplugin.Listeners.GoodWeather;
-import norsecommunityplugin.norsecommunityplugin.Listeners.HeldItemListener;
-import norsecommunityplugin.norsecommunityplugin.Listeners.JoinQuitListener;
-import norsecommunityplugin.norsecommunityplugin.Listeners.WarriorAbilityListener;
+import norsecommunityplugin.norsecommunityplugin.Listeners.*;
 import norsecommunityplugin.norsecommunityplugin.Tasks.KeepDayTask;
 import norsecommunityplugin.norsecommunityplugin.commands.*;
 import norsecommunityplugin.norsecommunityplugin.commands.Testing.*;
@@ -109,6 +106,7 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GoodWeather(), this);
         getServer().getPluginManager().registerEvents(new WarriorAbilityListener(this), this);
         getServer().getPluginManager().registerEvents(new HeldItemListener(this), this);
+        getServer().getPluginManager().registerEvents(new CraftingListener(this), this);
         BukkitTask keepDayTask = new KeepDayTask(this).runTaskTimer(this, 0L, 100L);
 
         //Registering managers
