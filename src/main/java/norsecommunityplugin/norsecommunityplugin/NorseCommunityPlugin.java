@@ -87,6 +87,7 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         getCommand("setprotection").setExecutor(new SetProtection(this));
         getCommand("setclass").setExecutor(new SetClass(this));
         getCommand("giveitem").setExecutor(new GiveItem(this));
+        getCommand("getarmor").setExecutor(new GetArmor(this));
 
 
 

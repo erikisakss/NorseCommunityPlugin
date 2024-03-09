@@ -69,3 +69,7 @@ commands:
     description: Gives an item to a player
     usage: /giveitem <name>
     permission: norsecommunityplugin.giveitem
+  getarmor:
+    description: Gives you armor
+    usage: /getarmor <name>
+    permission: norsecommunityplugin.getarmor

@@ -22,10 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ItemManager {
 
@@ -95,6 +92,32 @@ public class ItemManager {
         return 0; // Return 0 if no weapon is held or if the blueprint is not found or if the player's class does not match the weapon's class
     }
 
+    public int calculateProtectionForHeldArmor(Player player) {
+        int totalProtection = 0;
+
+        // Iterate over each armor slot
+        ItemStack[] armorContents = player.getInventory().getArmorContents();
+        for (ItemStack armorPiece : armorContents) {
+            if (armorPiece != null && armorPiece.hasItemMeta()) {
+                ItemMeta meta = armorPiece.getItemMeta();
+                NamespacedKey idKey = new NamespacedKey(plugin, "armor_id");
+                NamespacedKey levelKey = new NamespacedKey(plugin, "armor_level");
+                PersistentDataContainer data = meta.getPersistentDataContainer();
+                if (data.has(idKey, PersistentDataType.STRING) && data.has(levelKey, PersistentDataType.INTEGER)) {
+                    String armorId = data.get(idKey, PersistentDataType.STRING);
+                    int armorLevel = data.get(levelKey, PersistentDataType.INTEGER);
+                    ArmorBlueprint blueprint = (ArmorBlueprint) itemBlueprintCache.get(armorId);
+                    if (blueprint != null) {
+                        // Add the protection from this armor piece, adjusted for its level
+                        totalProtection += blueprint.getProtection(armorLevel);
+                    }
+                }
+            }
+        }
+
+        return totalProtection;
+    }
+
     public WeaponBlueprint getHeldWeaponBlueprint(Player player, ItemStack heldItem) {
         if (heldItem.hasItemMeta()) {
             ItemMeta meta = heldItem.getItemMeta();
@@ -134,7 +157,7 @@ public class ItemManager {
             case "Weapon":
                 return createWeaponItemStack((WeaponBlueprint) blueprint);
             case "Armor":
-                return createArmorItemStack((ArmorBlueprint) blueprint);
+                return null; // Similarly for armor
             case "Accessory":
                 return null; // Similarly for accessory
             default:
@@ -198,21 +221,27 @@ public class ItemManager {
         return item;
     }
 
-    private ItemStack createArmorItemStack(ArmorBlueprint blueprint) {
+    public ItemStack createArmorItemStack(String armorBlueprint) {
+
+        ArmorBlueprint blueprint = (ArmorBlueprint) itemBlueprintCache.get(armorBlueprint);
         ItemStack item = new ItemStack(Material.valueOf(blueprint.getMaterial()));
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(formatRarity(blueprint.getName() + " (+" + blueprint.getLevel() + ")", blueprint.getRarity()));
+        String name = blueprint.getName();
+        name = name.replace("_", " ");
+        meta.displayName(formatRarity(name + " (+" + blueprint.getLevel() + ")", blueprint.getRarity()));
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text(blueprint.getType()).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text(blueprint.getProtection() + " Protection").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("Protection: " + blueprint.getProtection(1)).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
         lore.add(Component.empty());
 
-        for (String type : blueprint.getStatBonusTypes()) {
-            lore.add(Component.text(type + " Bonus: " + blueprint.getStatBonus(blueprint.getLevel())).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
-        }
+        Random random = new Random();
+        int randomIndex = random.nextInt(blueprint.getStatBonusTypes().size());
+        String statType = blueprint.getStatBonusTypes().get(randomIndex);
+        int statBonus = blueprint.getStatBonus(blueprint.getLevel());
+        lore.add(Component.text(statType + " Bonus: " + statBonus).color(NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false));
         lore.add(Component.empty());
 
         lore.add(Component.text("Item Grade: " + blueprint.getItemGrade() + " Class").color(NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false));
@@ -220,6 +249,10 @@ public class ItemManager {
         lore.add(Component.empty());
 
         meta.lore(lore);
+
+        NamespacedKey statTypeKey = new NamespacedKey(plugin, "armor_stat_type");
+        meta.getPersistentDataContainer().set(statTypeKey, PersistentDataType.STRING, statType);
+
         NamespacedKey levelKey = new NamespacedKey(plugin, "armor_level");
         meta.getPersistentDataContainer().set(levelKey, PersistentDataType.INTEGER, blueprint.getLevel());
 

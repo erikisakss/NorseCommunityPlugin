@@ -7,11 +7,12 @@ import java.util.Map;
 public class ArmorBlueprint extends ItemBlueprint{
 
     private String itemGrade;
-    private int protection;
+    private Map<Integer, Integer> protection;
     private ArrayList<String> statBonusTypes;
     private Map<Integer, Integer> statBonus;
 
-    public ArmorBlueprint(String name, String type, String rarity, String material, int level, int requiredLevel, double price, String itemGrade, int protection, ArrayList<String> statBonusTypes, Map<Integer, Integer> statBonus) {
+
+    public ArmorBlueprint(String name, String type, String rarity, String material, int level, int requiredLevel, double price, String itemGrade, Map<Integer, Integer> protection, ArrayList<String> statBonusTypes, Map<Integer, Integer> statBonus) {
         super(name, type, rarity, material, requiredLevel, level, price);
         this.itemGrade = itemGrade;
         this.protection = protection;
@@ -23,8 +24,8 @@ public class ArmorBlueprint extends ItemBlueprint{
         return itemGrade;
     }
 
-    public int getProtection() {
-        return protection;
+    public int getProtection(int level) {
+        return protection.get(level);
     }
 
     public ArrayList<String> getStatBonusTypes() {
@@ -40,7 +41,7 @@ public class ArmorBlueprint extends ItemBlueprint{
     }
 
     public void setProtection(int protection) {
-        this.protection = protection;
+        this.protection.put(this.getLevel(), protection);
     }
 
 

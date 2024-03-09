@@ -35,4 +35,42 @@ items:
         9: 90
         10: 100
 
+  Half_Plate_Helmet:
+    type: "Armor"
+    itemGrade: "Low"
+    rarity: "Common"
+    playerClass: "Warrior"
+    material: "IRON_HELMET"
+    price: 100.00
+    requiredLevel: 1
+    statBonusTypes:
+      - "Health"
+      - "Dexterity"
+      - "Strength"
+      - "Intelligence"
+      - "Magic Power"
+    upgrades:
+      protection:
+        1: 6
+        2: 10
+        3: 14
+        4: 18
+        5: 22
+        6: 26
+        7: 32
+        8: 41
+        9: 54
+        10: 74
+      statBonus:
+        1: 10
+        2: 20
+        3: 30
+        4: 40
+        5: 50
+        6: 60
+        7: 70
+        8: 80
+        9: 90
+        10: 100
+
 

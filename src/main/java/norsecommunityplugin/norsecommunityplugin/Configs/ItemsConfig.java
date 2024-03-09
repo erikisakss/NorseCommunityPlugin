@@ -96,10 +96,14 @@ public class ItemsConfig extends Config{
             int requiredLevel = itemSection.getInt("requiredLevel");
             double price = itemSection.getDouble("price");
             String itemGrade = itemSection.getString("itemGrade");
-            int protection = itemSection.getInt("protection");
+            Map<Integer, Integer> protection = new HashMap<>();
+            ConfigurationSection protectionSection = upgradesSection.getConfigurationSection("protection");
+            for (String key : protectionSection.getKeys(false)) {
+                protection.put(Integer.parseInt(key), protectionSection.getInt(key));
+            }
             ArrayList<String> statBonusTypes = (ArrayList<String>) itemSection.getList("statBonusTypes");
             Map<Integer, Integer> statBonus = new HashMap<>();
-            ConfigurationSection statBonusSection = upgradesSection .getConfigurationSection("statBonus");
+            ConfigurationSection statBonusSection = upgradesSection.getConfigurationSection("statBonus");
             for (String key : statBonusSection.getKeys(false)) {
                 statBonus.put(Integer.parseInt(key), statBonusSection.getInt(key));
             }

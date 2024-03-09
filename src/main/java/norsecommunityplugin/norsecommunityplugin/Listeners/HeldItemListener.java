@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,6 +42,24 @@ public class HeldItemListener implements Listener {
             resetStats(player); // No valid item held, reset stats
         }
 
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Player player = (Player) event.getWhoClicked();
+            updateArmorStats(player);
+        }, 1L); // Delay to ensure inventory updates
+    }
+
+    private void updateArmorStats(Player player) {
+        int totalProtection = itemManager.calculateProtectionForHeldArmor(player);
+        PlayerProfile profile = playerProfileManager.getProfile(player.getUniqueId());
+        if (profile != null) {
+            profile.setProtection(totalProtection);
+        }
     }
 
     private void resetStats(Player player) {
