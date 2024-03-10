@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ItemUpgrader {
 
@@ -34,19 +35,30 @@ public class ItemUpgrader {
     public ItemStack upgradeItem(ItemStack item, ItemStack scroll) {
         // Get the item blueprint
         ItemMeta meta = item.getItemMeta();
-        NamespacedKey typeKey = new NamespacedKey(plugin, "type");
+        NamespacedKey typeKey = new NamespacedKey(plugin, "item_type");
         String type = meta.getPersistentDataContainer().get(typeKey, PersistentDataType.STRING);
-        String itemGrade;
+        Bukkit.getLogger().info("Type: " + type);
 
-        if (type == "Weapon") {
+        if (type == null) {
+            return item;
+        }
+
+        if (type.equalsIgnoreCase("Weapon")) {
+            Bukkit.getLogger().info("Upgrading weapon");
             NamespacedKey weaponKey = new NamespacedKey(plugin, "weapon_id");
+            Bukkit.getLogger().info("Weapon Key: " + weaponKey);
             String weaponId = meta.getPersistentDataContainer().get(weaponKey, PersistentDataType.STRING);
+            Bukkit.getLogger().info("Weapon ID: " + weaponId);
             WeaponBlueprint blueprint = (WeaponBlueprint) itemManager.getItemBlueprint(weaponId);
+            Bukkit.getLogger().info("Blueprint: " + blueprint);
             return upgradeWeapon(item, scroll, blueprint);
-        } else if (type == "Armor") {
+        } else if (type.equalsIgnoreCase("Armor")) {
             NamespacedKey armorKey = new NamespacedKey(plugin, "armor_id");
+            Bukkit.getLogger().info("Armor Key: " + armorKey);
             String armorId = meta.getPersistentDataContainer().get(armorKey, PersistentDataType.STRING);
+            Bukkit.getLogger().info("Armor ID: " + armorId);
             ArmorBlueprint blueprint = (ArmorBlueprint) itemManager.getItemBlueprint(armorId);
+            Bukkit.getLogger().info("Blueprint: " + blueprint);
             return upgradeArmor(item, scroll, blueprint);
         }
 
@@ -56,19 +68,34 @@ public class ItemUpgrader {
 
     private ItemStack upgradeWeapon(ItemStack item, ItemStack scroll, WeaponBlueprint blueprint) {
         // Get the weapon's current level
-        ItemMeta meta = item.getItemMeta();
+        Bukkit.getLogger().info("Upgrading weapon");
+        ItemStack upgradedItem = item.clone();
+        ItemMeta meta = upgradedItem.getItemMeta();
         NamespacedKey levelKey = new NamespacedKey(plugin, "weapon_level");
+        Bukkit.getLogger().info("Level Key: " + levelKey);
         int level = meta.getPersistentDataContainer().get(levelKey, PersistentDataType.INTEGER);
+        Bukkit.getLogger().info("Level: " + level);
         //Check if the scroll is the correct type and grade (Blessed grade works on all weapons)
         NamespacedKey scrollTypeKey = new NamespacedKey(plugin, "scroll_type");
         String scrollType = scroll.getItemMeta().getPersistentDataContainer().get(scrollTypeKey, PersistentDataType.STRING);
+        Bukkit.getLogger().info("Scroll Type: " + scrollType);
         NamespacedKey scrollGradeKey = new NamespacedKey(plugin, "scroll_grade");
         String scrollGrade = scroll.getItemMeta().getPersistentDataContainer().get(scrollGradeKey, PersistentDataType.STRING);
+        Bukkit.getLogger().info("Scroll Grade: " + scrollGrade);
 
-        if (scrollType != "Upgrade")
+        if (!Objects.equals(scrollType, "Upgrade")) {
+            Bukkit.getLogger().info("Scroll type is not upgrade");
             return item;
+        }
 
-        if (scrollGrade != blueprint.getItemGrade() && scrollType != "Blessed") {
+        if (scrollGrade == null) {
+            Bukkit.getLogger().info("Scroll grade is null");
+            return item;
+        }
+
+        // Check if the scroll is the correct grade, if the scroll is not blessed, check if the scroll grade is the same as the weapon grade
+        if (!scrollGrade.equalsIgnoreCase("Blessed") && !scrollGrade.equalsIgnoreCase(blueprint.getItemGrade())) {
+            Bukkit.getLogger().info("Scroll grade is not blessed or the same as the weapon grade");
             return item;
         }
 
@@ -79,17 +106,23 @@ public class ItemUpgrader {
         }
 
         meta.getPersistentDataContainer().set(levelKey, PersistentDataType.INTEGER, newLevel);
+       // Bukkit.getLogger().info("Old Name: " + upgradedItem.displayName());
         Component newName = itemManager.updateDisplayNameWithNewLevel(item.displayName(), newLevel, blueprint.getRarity());
+        //Bukkit.getLogger().info("New Name: " + newName);
         meta.displayName(newName);
-        upgradeWeaponStats(item, blueprint, newLevel);
-        item.setItemMeta(meta);
+        upgradedItem.setItemMeta(meta);
 
-        return item;
+        upgradeWeaponStats(upgradedItem, blueprint, newLevel);
+
+
+
+        return upgradedItem;
     }
 
     private void upgradeWeaponStats(ItemStack item, WeaponBlueprint blueprint, int newLevel) {
         ItemMeta meta = item.getItemMeta();
         // Get the lore
+        Bukkit.getLogger().info("Upgrading weapon stats");
         ArrayList<Component> lore = new ArrayList<>();
         lore.add(Component.text(blueprint.getType()).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text(blueprint.getPlayerClass()).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
@@ -116,6 +149,7 @@ public class ItemUpgrader {
         lore.add(Component.empty());
 
         meta.lore(lore);
+        item.setItemMeta(meta);
     }
 
     private ItemStack upgradeArmor(ItemStack item, ItemStack scroll, ArmorBlueprint blueprint) {

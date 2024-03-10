@@ -210,7 +210,7 @@ public class ItemManager {
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, blueprint.getType());
 
         NamespacedKey scrollTypeKey = new NamespacedKey(plugin, "scroll_type");
-        meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, blueprint.getScrollType());
+        meta.getPersistentDataContainer().set(scrollTypeKey, PersistentDataType.STRING, blueprint.getScrollType());
 
         NamespacedKey gradeKey = new NamespacedKey(plugin, "scroll_grade");
         meta.getPersistentDataContainer().set(gradeKey, PersistentDataType.STRING, blueprint.getItemGrade());
@@ -262,7 +262,7 @@ public class ItemManager {
         AttributeModifier attackSpeedModifier = new AttributeModifier("generic.attackSpeed", mapAttackSpeedToValue(blueprint.getAttackSpeed()), AttributeModifier.Operation.ADD_NUMBER);
         meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, attackSpeedModifier);
 
-        NamespacedKey typeKey = new NamespacedKey(plugin, "type");
+        NamespacedKey typeKey = new NamespacedKey(plugin, "item_type");
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, blueprint.getType());
 
         NamespacedKey levelKey = new NamespacedKey(plugin, "weapon_level");
@@ -312,7 +312,7 @@ public class ItemManager {
 
         meta.lore(lore);
 
-        NamespacedKey typeKey = new NamespacedKey(plugin, "type");
+        NamespacedKey typeKey = new NamespacedKey(plugin, "item_type");
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, blueprint.getType());
 
         NamespacedKey statTypeKey = new NamespacedKey(plugin, "armor_stat_type");
@@ -367,6 +367,7 @@ public class ItemManager {
     public Component updateDisplayNameWithNewLevel(Component currentDisplayName, int newLevel, String rarity) {
         // Extract base item name from the current display name
         String baseItemName = getBaseItemName(currentDisplayName);
+
         // Construct the new display name with the updated level
         String newName = baseItemName + " (+" + newLevel + ")";
         // Apply rarity formatting to the new display name
@@ -375,10 +376,14 @@ public class ItemManager {
 
     private String getBaseItemName(Component displayName) {
         String displayNameText = PlainTextComponentSerializer.plainText().serialize(displayName);
+        Bukkit.getLogger().info("Display name text: " + displayNameText);
+
+        displayNameText = displayNameText.replaceAll("^\\[", "");
         // Use a regex pattern to extract the base item name
         Pattern pattern = Pattern.compile("(.+) \\(\\+\\d+\\)");
         Matcher matcher = pattern.matcher(displayNameText);
         if (matcher.find()) {
+            Bukkit.getLogger().info("Base item name: " + matcher.group(1));
             return matcher.group(1);
         }
 
