@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -58,19 +59,12 @@ public class HeldItemListener implements Listener {
         }
     }
 
-    private void updatePlayerStats(Player player) {
-        ItemStack newItem = player.getInventory().getItemInMainHand();
-        resetStats(player); // Reset stats when changing held item
-
-        if (newItem.getType() != Material.AIR) {
-            int damageBonus = itemManager.calculateDamageForHeldWeapon(player, newItem);
-            applyDamageBonus(player, damageBonus);
-        } else {
-            resetStats(player); // No valid item held, reset stats
-        }
+    @EventHandler
+    private void playerJoinEvent(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        updateArmorStats(player);
+        updatePlayerStats(player);
     }
-
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -78,7 +72,11 @@ public class HeldItemListener implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         if (event.getSlotType() == InventoryType.SlotType.QUICKBAR || event.getClickedInventory() instanceof PlayerInventory || event.isShiftClick()) {
-            updatePlayerStats(player);
+            Bukkit.getLogger().info("Inventory click event for held item");
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                updatePlayerStats(player);
+            }, 1L); // Delay to ensure inventory updates
+
         }
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -91,6 +89,18 @@ public class HeldItemListener implements Listener {
         PlayerProfile profile = playerProfileManager.getProfile(player.getUniqueId());
         if (profile != null) {
             profile.setProtection(totalProtection);
+        }
+    }
+
+    private void updatePlayerStats(Player player) {
+        ItemStack newItem = player.getInventory().getItemInMainHand();
+        resetStats(player); // Reset stats when changing held item
+
+        if (newItem.getType() != Material.AIR) {
+            int damageBonus = itemManager.calculateDamageForHeldWeapon(player, newItem);
+            applyDamageBonus(player, damageBonus);
+        } else {
+            resetStats(player); // No valid item held, reset stats
         }
     }
 
