@@ -11,8 +11,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class HeldItemListener implements Listener {
@@ -45,11 +48,40 @@ public class HeldItemListener implements Listener {
     }
 
     @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        Player player = (Player) event.getWhoClicked();
+        // Check if the drag involves the player's hotbar
+        boolean affectsHotbar = event.getInventorySlots().stream().anyMatch(slot -> slot >= 0 && slot < 9);
+        if (affectsHotbar) {
+            updatePlayerStats(player);
+        }
+    }
+
+    private void updatePlayerStats(Player player) {
+        ItemStack newItem = player.getInventory().getItemInMainHand();
+        resetStats(player); // Reset stats when changing held item
+
+        if (newItem.getType() != Material.AIR) {
+            int damageBonus = itemManager.calculateDamageForHeldWeapon(player, newItem);
+            applyDamageBonus(player, damageBonus);
+        } else {
+            resetStats(player); // No valid item held, reset stats
+        }
+    }
+
+
+    @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
 
+        Player player = (Player) event.getWhoClicked();
+
+        if (event.getSlotType() == InventoryType.SlotType.QUICKBAR || event.getClickedInventory() instanceof PlayerInventory || event.isShiftClick()) {
+            updatePlayerStats(player);
+        }
+
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Player player = (Player) event.getWhoClicked();
             updateArmorStats(player);
         }, 1L); // Delay to ensure inventory updates
     }
