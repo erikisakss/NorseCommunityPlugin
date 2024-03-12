@@ -35,21 +35,18 @@ public class GuiManager {
 
     public void openUpgradeGUI (Player player) {
        upgradeInventory = Bukkit.createInventory(player, 45, Component.text("Upgrade Items").color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD).asComponent());
-       ItemStack placeholder = itemManager.getItem("Blessed_Scroll");
+
        ItemStack glass = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
          ItemStack blackGlass = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
          ItemMeta blackMeta = blackGlass.getItemMeta();
-         blackMeta.displayName(Component.text(" ").color(NamedTextColor.BLACK).decoration(TextDecoration.BOLD, false));
+         blackMeta.displayName(Component.text("").color(NamedTextColor.BLACK).decoration(TextDecoration.BOLD, false));
          ItemMeta glassMeta = glass.getItemMeta();
             glassMeta.displayName(Component.text("Upgrade!").color(NamedTextColor.GREEN).decoration(TextDecoration.BOLD, false));
-       ItemMeta placeholderMeta = placeholder.getItemMeta();
-       placeholderMeta.displayName(Component.text("Place your item and scroll here!").color(NamedTextColor.LIGHT_PURPLE).decoration(TextDecoration.ITALIC, false));
-       placeholder.setItemMeta(placeholderMeta);
+
+
          glass.setItemMeta(glassMeta);
             blackGlass.setItemMeta(blackMeta);
 
-         upgradeInventory.setItem(0, placeholder);
-          //  upgradeInventory.setItem(8, glass);
 
         for(int i=0; i<=8; i++) {
             upgradeInventory.setItem(i, blackGlass);
