@@ -37,7 +37,7 @@ public class ItemUpgrader {
         ItemMeta meta = item.getItemMeta();
         NamespacedKey typeKey = new NamespacedKey(plugin, "item_type");
         String type = meta.getPersistentDataContainer().get(typeKey, PersistentDataType.STRING);
-      //  Bukkit.getLogger().info("Type: " + type);
+        Bukkit.getLogger().info("Type: " + type);
 
         if (type == null) {
             return item;
@@ -153,7 +153,80 @@ public class ItemUpgrader {
     }
 
     private ItemStack upgradeArmor(ItemStack item, ItemStack scroll, ArmorBlueprint blueprint) {
+        // Get the armor's current level
+        ItemStack upgradedItem = item.clone();
+        ItemMeta meta = upgradedItem.getItemMeta();
+        NamespacedKey levelKey = new NamespacedKey(plugin, "armor_level");
+        int level = meta.getPersistentDataContainer().get(levelKey, PersistentDataType.INTEGER);
+        Bukkit.getLogger().info("Level: " + level);
 
-        return item;
+        //Check if the scroll is the correct type and grade (Blessed grade works on all armor)
+        NamespacedKey scrollTypeKey = new NamespacedKey(plugin, "scroll_type");
+        String scrollType = scroll.getItemMeta().getPersistentDataContainer().get(scrollTypeKey, PersistentDataType.STRING);
+        NamespacedKey scrollGradeKey = new NamespacedKey(plugin, "scroll_grade");
+        String scrollGrade = scroll.getItemMeta().getPersistentDataContainer().get(scrollGradeKey, PersistentDataType.STRING);
+
+        if (!Objects.equals(scrollType, "Upgrade")) {
+            return null;
+        }
+
+        if (scrollGrade == null) {
+            return null;
+        }
+
+        // Check if the scroll is the correct grade, if the scroll is not blessed, check if the scroll grade is the same as the armor grade
+        if (!scrollGrade.equalsIgnoreCase("Blessed") && !scrollGrade.equalsIgnoreCase(blueprint.getItemGrade())) {
+            return null;
+        }
+
+        int newLevel = level + 1;
+        Bukkit.getLogger().info("New Level: " + newLevel);
+        // Check if the armor is at max level
+        if (newLevel > 10) {
+            return null;
+        }
+
+        meta.getPersistentDataContainer().set(levelKey, PersistentDataType.INTEGER, newLevel);
+        Component newName = itemManager.updateDisplayNameWithNewLevel(item.displayName(), newLevel, blueprint.getRarity());
+
+        meta.displayName(newName);
+        upgradedItem.setItemMeta(meta);
+        Bukkit.getLogger().info("Level in meta: " + meta.getPersistentDataContainer().get(levelKey, PersistentDataType.INTEGER));
+
+        upgradeArmorStats(upgradedItem, blueprint, newLevel);
+
+        return upgradedItem;
+    }
+
+    private void upgradeArmorStats(ItemStack item, ArmorBlueprint blueprint, int newLevel) {
+        ItemMeta meta = item.getItemMeta();
+        // Get the lore
+        ArrayList<Component> lore = new ArrayList<>();
+        lore.add(Component.text(blueprint.getType()).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        if (blueprint.getRequiredLevel() > 1) {
+            lore.add(Component.text("Level: " + blueprint.getRequiredLevel() + "+").color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
+        }
+
+
+        int baseProtection = blueprint.getProtection(newLevel);
+        lore.add(Component.text("Protection: " + baseProtection).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+
+        lore.add(Component.empty());
+
+        NamespacedKey statBonusKey = new NamespacedKey(plugin, "armor_stat_type");
+        String statBonusType = meta.getPersistentDataContainer().get(statBonusKey, PersistentDataType.STRING);
+        if (statBonusType != null) {
+            int statBonus = blueprint.getStatBonus(newLevel);
+            lore.add(Component.text(statBonusType + " Bonus: " + statBonus).color(NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false));
+        }
+        lore.add(Component.empty());
+
+        lore.add(Component.text("Item Grade: " + blueprint.getItemGrade() + " Class").color(NamedTextColor.GREEN).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.empty());
+        lore.add(Component.empty());
+
+        meta.lore(lore);
+        Bukkit.getLogger().info("Setting lore");
+        item.setItemMeta(meta);
     }
 }

@@ -297,6 +297,9 @@ public class ItemManager {
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text(blueprint.getType()).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text("Protection: " + blueprint.getProtection(1)).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        if (blueprint.getRequiredLevel() > 1) {
+            lore.add(Component.text("Level: " + blueprint.getRequiredLevel() + "+").color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
+        }
         lore.add(Component.empty());
 
         Random random = new Random();

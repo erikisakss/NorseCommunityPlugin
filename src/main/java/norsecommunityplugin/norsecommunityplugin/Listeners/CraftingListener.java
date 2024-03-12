@@ -93,7 +93,7 @@ public class CraftingListener implements Listener {
         if(event.getWhoClicked() instanceof Player &&
                 event.getClickedInventory().equals(guiManager.getUpgradeInventory())) {
             int slot = event.getSlot();
-            
+
             // If clicked slot is result slot, assume user wants to take result item
             if(unclickableSlots.contains(slot)) {
                 event.setCancelled(true);
@@ -164,6 +164,7 @@ public class CraftingListener implements Listener {
         }
 
         upgradedItem = itemUpgrader.upgradeItem(itemToUpgrade, scroll);
+        Bukkit.getLogger().info("Upgraded Item: " + upgradedItem);
 
         if (upgradedItem != null) {
 
