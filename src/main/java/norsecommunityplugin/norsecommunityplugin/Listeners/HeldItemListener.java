@@ -72,7 +72,7 @@ public class HeldItemListener implements Listener {
         Player player = (Player) event.getWhoClicked();
 
         if (event.getSlotType() == InventoryType.SlotType.QUICKBAR || event.getClickedInventory() instanceof PlayerInventory || event.isShiftClick()) {
-            Bukkit.getLogger().info("Inventory click event for held item");
+           // Bukkit.getLogger().info("Inventory click event for held item");
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 updatePlayerStats(player);
             }, 1L); // Delay to ensure inventory updates

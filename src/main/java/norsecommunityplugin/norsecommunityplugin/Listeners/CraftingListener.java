@@ -32,7 +32,7 @@ public class CraftingListener implements Listener {
     private ItemUpgrader itemUpgrader;
     private GuiManager guiManager;
     private NorseCommunityPlugin plugin;
-    ItemStack upgradedItem;
+    ItemStack[] upgradedItem;
     int resultSlot = 24;
     int scrollSlot = -1;
     int itemSlot = -1;
@@ -117,7 +117,11 @@ public class CraftingListener implements Listener {
             if (slot == resultSlot) {
                 event.setCancelled(false);
 
-                if (upgradedItem != null) {
+                if (upgradedItem != null && upgradedItem.length > 1) {
+                    event.setCancelled(true);
+                    Bukkit.getLogger().info("Upgraded Item: " + upgradedItem[1]);
+                    Bukkit.getLogger().info("Upgraded Item: " + upgradedItem[0]);
+                    Bukkit.getLogger().info("Upgraded item length: " + upgradedItem.length);
                     // Create new scroll stack if scroll amount was greater than 1
                     if (scroll.getAmount() > 1) {
                         ItemStack newScroll = scroll.clone();
@@ -129,6 +133,21 @@ public class CraftingListener implements Listener {
 
                     // Remove the item to upgrade
                     event.getClickedInventory().setItem(itemSlot, new ItemStack(Material.AIR));
+                    event.getClickedInventory().setItem(resultSlot, upgradedItem[1]);
+                    event.setCancelled(false);
+                } else if (upgradedItem != null) {
+                        // Create new scroll stack if scroll amount was greater than 1
+                        if (scroll.getAmount() > 1) {
+                            ItemStack newScroll = scroll.clone();
+                            newScroll.setAmount(scroll.getAmount() - 1);
+                            event.getClickedInventory().setItem(scrollSlot, newScroll);
+                        } else {
+                            event.getClickedInventory().setItem(scrollSlot, new ItemStack(Material.AIR));
+                        }
+
+                        // Remove the item to upgrade
+                        event.getClickedInventory().setItem(itemSlot, new ItemStack(Material.AIR));
+                        event.setCancelled(false);
                 }
 
             }
@@ -164,12 +183,12 @@ public class CraftingListener implements Listener {
         }
 
         upgradedItem = itemUpgrader.upgradeItem(itemToUpgrade, scroll);
-        Bukkit.getLogger().info("Upgraded Item: " + upgradedItem);
+        Bukkit.getLogger().info("Upgraded Item: " + upgradedItem[0]);
 
         if (upgradedItem != null) {
 
             //
-            upgradeInventory.setItem(resultSlot, upgradedItem); // set result in slot 9 (index 8)
+            upgradeInventory.setItem(resultSlot, upgradedItem[0]); // set result in slot 9 (index 8)
         }
 
         // You don't need to set to AIR if upgrade failed as user can modify items and try again
