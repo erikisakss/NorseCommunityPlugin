@@ -22,14 +22,22 @@ public class GiveItem implements CommandExecutor {
             return true;
         }
 
-        if (args.length != 1) {
-            sender.sendMessage("Usage: /giveitem <item_name>");
+        if (args.length != 2) {
+            sender.sendMessage("Usage: /giveitem <item_name> <amount>");
             return true;
         }
 
         String itemName = args[0];
         Player player = (Player) sender;
         ItemManager itemManager = ItemManager.getInstance(plugin);
+
+        int amount;
+        try {
+            amount = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            player.sendMessage("The amount must be a number.");
+            return true;
+        }
 
         // Get the ItemStack for the item name provided
         ItemStack item = itemManager.getItem(itemName);
@@ -38,6 +46,8 @@ public class GiveItem implements CommandExecutor {
             player.sendMessage("The item " + itemName + " does not exist.");
             return true;
         }
+
+        item.setAmount(amount);
 
         // Give the item to the player
         player.getInventory().addItem(item);
