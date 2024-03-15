@@ -93,7 +93,7 @@ public class CraftingListener implements Listener {
         if (event.getClickedInventory() == null) return;
         // Replace getPlayer() with getWhoClicked()
         if (event.getWhoClicked() instanceof Player &&
-                event.getClickedInventory().equals(guiManager.getUpgradeInventory())) {
+                event.getClickedInventory().equals(guiManager.getUpgradeInventory()) || event.isShiftClick() && event.getWhoClicked().getOpenInventory().getTopInventory().equals(guiManager.getUpgradeInventory())) {
             int slot = event.getSlot();
             InventoryAction action = event.getAction();
             Player player = (Player) event.getWhoClicked();
