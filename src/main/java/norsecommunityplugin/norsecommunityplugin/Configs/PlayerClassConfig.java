@@ -41,4 +41,9 @@ public class PlayerClassConfig extends Config{
         return getDouble(path);
     }
 
+    public double getClassDamage(String className) {
+        String path = "Classes." + className + ".damageMultiplier";
+        return getDouble(path);
+    }
+
 }

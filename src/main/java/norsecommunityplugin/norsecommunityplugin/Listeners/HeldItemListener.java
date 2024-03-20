@@ -1,5 +1,6 @@
 package norsecommunityplugin.norsecommunityplugin.Listeners;
 
+import norsecommunityplugin.norsecommunityplugin.Configs.PlayerClassConfig;
 import norsecommunityplugin.norsecommunityplugin.Items.ItemBlueprint;
 import norsecommunityplugin.norsecommunityplugin.NorseCommunityPlugin;
 import norsecommunityplugin.norsecommunityplugin.managers.ItemManager;
@@ -25,10 +26,13 @@ public class HeldItemListener implements Listener {
     private ItemManager itemManager;
     private PlayerProfileManager playerProfileManager;
 
+    private PlayerClassConfig playerClassConfig;
+
     public HeldItemListener(NorseCommunityPlugin plugin) {
         this.plugin = plugin;
         this.itemManager = ItemManager.getInstance(plugin);
         this.playerProfileManager = PlayerProfileManager.getInstance(plugin);
+        this.playerClassConfig = PlayerClassConfig.getInstance(plugin);
     }
 
     // Add event handlers here
@@ -115,7 +119,12 @@ public class HeldItemListener implements Listener {
     private void applyDamageBonus(Player player, int damageBonus) {
         PlayerProfile profile = playerProfileManager.getProfile(player.getUniqueId());
         if (profile != null) {
-            profile.setDamage(profile.getDamage() + damageBonus);
+
+            double damageClassMultiplier = playerClassConfig.getClassDamage(profile.getPlayerClass());
+            int level = profile.getLevel();
+            int damage = (int) ((damageBonus + profile.getDamage()) * damageClassMultiplier * level);
+
+            profile.setDamage(damage);
         }
     }
 

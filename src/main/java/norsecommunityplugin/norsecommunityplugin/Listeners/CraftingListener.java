@@ -105,10 +105,16 @@ public class CraftingListener implements Listener {
             boolean isShiftIntoCustomInventory = isShiftClick && action == InventoryAction.MOVE_TO_OTHER_INVENTORY
                     && topInventory.equals(guiManager.getUpgradeInventory());
 
-            if (clickedInventory.equals(guiManager.getUpgradeInventory()) || isShiftIntoCustomInventory) {
+            boolean isShiftFromCustomInventory = isShiftClick && action == InventoryAction.MOVE_TO_OTHER_INVENTORY
+                    && clickedInventory.equals(guiManager.getUpgradeInventory());
+
+            if (clickedInventory.equals(guiManager.getUpgradeInventory()) || isShiftIntoCustomInventory || isShiftFromCustomInventory) {
+                Bukkit.getLogger().info("Slot: " + slot);
+                Bukkit.getLogger().info((isShiftIntoCustomInventory ? "Shift-clicked into custom GUI" : "Normal click"));
+                Bukkit.getLogger().info((isShiftFromCustomInventory ? "Shift-clicked from custom GUI" : "Normal click"));
 
                 // If the action is specifically a shift-click into the custom GUI, handle as needed
-                if (isShiftIntoCustomInventory) {
+                if (isShiftIntoCustomInventory && !isShiftFromCustomInventory) {
                     // Here, you could apply a general rule for shift-clicks or replicate the logic below
                     // For demonstration, let's assume we're replicating the logic for processing items
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -125,12 +131,16 @@ public class CraftingListener implements Listener {
                 }
 
                 if (itemAndScrollSlots.contains(slot)) {
+                    Bukkit.getLogger().info("Slot clicked is item or scroll slot");
                     event.setCancelled(false);
                     //processUpgradeSlots(event.getClickedInventory(), itemAndScrollSlots, resultSlot);
 
-                    if (event.getClickedInventory().getItem(resultSlot) != null) {
+                    if (event.getClickedInventory().getItem(resultSlot) != null ) {
+                        Bukkit.getLogger().info("Result slot is not empty");
                         event.getClickedInventory().setItem(resultSlot, new ItemStack(Material.AIR));
                     }
+
+                    Bukkit.getLogger().info("Clicked inventory: " + event.getClickedInventory());
 
                     Bukkit.getScheduler().runTaskLater(plugin, () -> processUpgradeSlots(event.getClickedInventory(), itemAndScrollSlots, resultSlot), 1L);
 
