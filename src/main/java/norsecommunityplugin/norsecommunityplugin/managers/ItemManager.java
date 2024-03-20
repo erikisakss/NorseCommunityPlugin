@@ -262,6 +262,9 @@ public class ItemManager {
         AttributeModifier attackSpeedModifier = new AttributeModifier("generic.attackSpeed", mapAttackSpeedToValue(blueprint.getAttackSpeed()), AttributeModifier.Operation.ADD_NUMBER);
         meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, attackSpeedModifier);
 
+        NamespacedKey classKey = new NamespacedKey(plugin, "player_class");
+        meta.getPersistentDataContainer().set(classKey, PersistentDataType.STRING, blueprint.getPlayerClass());
+
         NamespacedKey typeKey = new NamespacedKey(plugin, "item_type");
         meta.getPersistentDataContainer().set(typeKey, PersistentDataType.STRING, blueprint.getType());
 
