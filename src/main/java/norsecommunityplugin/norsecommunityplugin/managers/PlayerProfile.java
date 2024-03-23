@@ -1,6 +1,10 @@
 package norsecommunityplugin.norsecommunityplugin.managers;
 
+import norsecommunityplugin.norsecommunityplugin.Abilities.Ability;
+
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerProfile {
 
@@ -22,12 +26,27 @@ public class PlayerProfile {
     private String nation;
     private String clan;
     private String playerClass;
+    private Map<String, Ability> abilities = new ConcurrentHashMap<>();
 
     public PlayerProfile(UUID uuid) {
         this.uuid = uuid;
     }
 
     // Getter och setter för level, xp, nation, clan, playerClass...
+
+
+    public Ability getAbility(String abilityName) {
+        return abilities.get(abilityName);
+    }
+
+    public void addAbility(Ability ability) {
+        abilities.put(ability.getName(), ability);
+    }
+
+    public void removeAbility(String abilityName) {
+        abilities.remove(abilityName);
+    }
+
 
     public UUID getUUID() {
         return uuid;

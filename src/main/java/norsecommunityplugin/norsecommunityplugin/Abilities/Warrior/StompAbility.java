@@ -37,4 +37,9 @@ public class StompAbility extends Ability {
             CooldownManager.setCooldown(player.getUniqueId(), this.name, this.cooldown);
 
         }
+
+        @Override
+        public void deactivate() {
+            // No need to deactivate
+        }
 }

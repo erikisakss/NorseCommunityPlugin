@@ -39,7 +39,7 @@ public class WarriorAbilityListener implements Listener {
         if (itemMeta != null && itemMeta.getPersistentDataContainer().has(classKey, PersistentDataType.STRING)) {
             String playerClass = itemMeta.getPersistentDataContainer().get(classKey, PersistentDataType.STRING);
             assert playerClass != null;
-            if (playerClass.equals(profile.getPlayerClass())) {
+            if (playerClass.equals(profile.getPlayerClass()) && profile.getPlayerClass().equals("Warrior")) {
                 Ability stomp = new StompAbility(player, plugin);
                 stomp.activate();
             }

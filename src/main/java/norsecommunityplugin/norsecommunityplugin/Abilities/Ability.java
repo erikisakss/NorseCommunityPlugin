@@ -27,5 +27,8 @@ public abstract class Ability {
     }
 
     public abstract void activate();
-
+    public abstract void deactivate();
+    public String getName() {
+        return name;
+    }
 }

@@ -43,6 +43,12 @@ public final class NorseCommunityPlugin extends JavaPlugin {
     private PlayerClassConfig playerClassConfig;
     private HealthSystem healthSystem;
 
+    public static NorseCommunityPlugin plugin;
+
+
+    public static NorseCommunityPlugin getPlugin() {
+        return plugin;
+    }
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -105,6 +111,7 @@ public final class NorseCommunityPlugin extends JavaPlugin {
         //Registering listeners
         getServer().getPluginManager().registerEvents(new GoodWeather(), this);
         getServer().getPluginManager().registerEvents(new WarriorAbilityListener(this), this);
+        getServer().getPluginManager().registerEvents(new AssassinAbilityListener(this), this);
         getServer().getPluginManager().registerEvents(new HeldItemListener(this), this);
         getServer().getPluginManager().registerEvents(new CraftingListener(this), this);
         BukkitTask keepDayTask = new KeepDayTask(this).runTaskTimer(this, 0L, 100L);

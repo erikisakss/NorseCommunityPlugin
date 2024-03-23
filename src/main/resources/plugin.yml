@@ -2,6 +2,7 @@ name: NorseCommunityPlugin
 version: '${project.version}'
 main: norsecommunityplugin.norsecommunityplugin.NorseCommunityPlugin
 api-version: '1.20'
+softdepend: [ProtocolLib]
 commands:
   setspawn:
     description: Sets the spawn
