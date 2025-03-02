@@ -1,4 +1,4 @@
-# Norse Community Plugin
+# Norse Community Plugin - WIP
 
 A comprehensive server-side MMORPG overhaul plugin for Minecraft that transforms the vanilla experience into a full-featured RPG game with custom systems, classes, abilities, items, and progression. No client-side mods required!
 
