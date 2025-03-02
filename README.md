@@ -94,20 +94,6 @@ Success rates vary based on:
 - Scroll grade (Low, Medium, High, Blessed)
 - Current item level
 
-## Installation
-
-1. Place the plugin JAR file in your server's `plugins` folder
-2. Restart your server
-3. Configure files in the `plugins/NorseCommunityPlugin` directory as needed
-4. Restart again to apply configuration changes
-
-As this is a server-side only plugin, players can connect with vanilla Minecraft clients - no mods or custom clients needed!
-
-## Requirements
-- Minecraft 1.20+
-- Bukkit/Spigot/Paper server
-- ProtocolLib dependency
-
 ## Configuration
 
 The plugin creates several configuration files:
